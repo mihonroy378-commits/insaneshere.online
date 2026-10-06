@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>INSANE SHARE — Fast Private File Transfer</title>
+<meta name="description" content="INSANE SHARE is a simple, fast and private way to share files with a temporary code.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<style>
+:root{--bg:#06070b;--panel:#0d1017;--panel2:#11151e;--line:#222936;--text:#f6f7fb;--muted:#8c94a5;--accent:#7c5cff;--accent2:#9b85ff;--green:#36d98b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 12% 0%,rgba(124,92,255,.16),transparent 30%),radial-gradient(circle at 90% 15%,rgba(42,160,255,.10),transparent 27%)}
+a{color:inherit;text-decoration:none}.container{width:min(1120px,calc(100% - 36px));margin:auto}
+.nav{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.05)}
+.brand{font-size:21px;font-weight:800;letter-spacing:-.6px}.brand span{color:var(--accent2)}
+.navlinks{display:flex;gap:25px;color:var(--muted);font-size:13px}.navlinks a:hover{color:white}
+.pill{border:1px solid var(--line);background:#10131b;padding:9px 13px;border-radius:999px;font-size:12px;color:#cbd0dc}
+.hero{text-align:center;padding:76px 0 48px}.eyebrow{display:inline-flex;gap:8px;align-items:center;border:1px solid #29263e;background:#11101b;color:#bdb3ff;border-radius:999px;padding:8px 13px;font-size:11px;font-weight:700;letter-spacing:.5px}.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
+h1{font-size:clamp(45px,7vw,78px);line-height:.98;letter-spacing:-4px;margin:24px 0 18px;font-weight:800}h1 span{background:linear-gradient(100deg,#fff,#a997ff);-webkit-background-clip:text;color:transparent}.hero p{max-width:620px;margin:auto;color:var(--muted);font-size:16px;line-height:1.7}
+.transfer-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.panel{background:linear-gradient(180deg,rgba(17,21,30,.95),rgba(11,14,21,.95));border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:0 20px 70px #0007}.panel-top{display:flex;justify-content:space-between;align-items:flex-start}.mini-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#17142a;color:#a997ff;font-size:20px}.label{font-size:11px;color:#6f7788;text-transform:uppercase;letter-spacing:1.5px}.panel h2{font-size:20px;margin:14px 0 6px}.desc{font-size:13px;line-height:1.6;color:var(--muted)}
+.drop{height:205px;margin:20px 0 14px;border:1px dashed #343b4b;border-radius:17px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;background:#0b0e14;transition:.2s}.drop.active{border-color:var(--accent);background:#121026;transform:scale(1.01)}.drop strong{font-size:14px}.choose{cursor:pointer;background:#191e28;border:1px solid #2b3341;padding:10px 14px;border-radius:10px;font-size:12px;font-weight:700}.file{background:#0a0d13;border:1px solid #222936;border-radius:12px;padding:11px 13px;margin-bottom:12px;font-size:12px;word-break:break-word;color:#d9dde7}
+.btn{width:100%;border:0;border-radius:11px;padding:14px;font-size:12px;font-weight:800;cursor:pointer;transition:.18s}.primary{background:var(--accent);color:white;box-shadow:0 8px 25px rgba(124,92,255,.2)}.primary:hover{background:#8c70ff;transform:translateY(-1px)}.primary:disabled{opacity:.35;cursor:not-allowed;transform:none}.code{width:100%;background:#080a0f;border:1px solid #2a313e;color:white;border-radius:12px;padding:16px;text-align:center;font-size:28px;letter-spacing:8px;font-weight:800;margin:25px 0 12px;outline:none;text-transform:uppercase}.code:focus{border-color:var(--accent)}.status{text-align:center;min-height:20px;color:#7f8797;font-size:12px;margin-top:13px}.transfer{margin-top:18px}.transfer-head{display:flex;justify-content:space-between;align-items:center;gap:20px}.room{font-size:25px;letter-spacing:5px;color:#a997ff;font-weight:800}.bar{height:9px;background:#080a0f;border-radius:99px;overflow:hidden;margin:25px 0 9px}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#b39fff);transition:.12s}.meta{display:flex;justify-content:space-between;color:#778091;font-size:11px}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:42px 0}.feature{padding:18px;border:1px solid var(--line);border-radius:16px;background:#0b0e14}.feature b{font-size:13px}.feature p{color:var(--muted);font-size:11px;line-height:1.5;margin-bottom:0}.footer{border-top:1px solid rgba(255,255,255,.06);margin-top:45px;padding:22px 0;color:#626a79;font-size:11px;display:flex;justify-content:space-between}.hidden{display:none!important}
+@media(max-width:720px){.navlinks{display:none}.container{width:min(100% - 24px,1120px)}.hero{padding-top:52px}h1{letter-spacing:-2.5px}.transfer-grid{grid-template-columns:1fr}.features{grid-template-columns:1fr}.footer{flex-direction:column;gap:8px}.panel{padding:19px}}
+
+.developer{margin-top:18px;text-align:center;padding:30px 20px;background:linear-gradient(135deg,#11131c,#0b0d13);border:1px solid #292d3d;border-radius:22px;box-shadow:0 20px 60px #0006}
+.dev-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#747c8d;margin-bottom:10px}
+.dev-name{font-size:26px;font-weight:800;letter-spacing:-.7px;margin:0}
+.dev-name span{color:#a997ff}
+.dev-brand{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:8px 13px;border-radius:999px;border:1px solid #332e51;background:#151225;color:#bdb3ff;font-size:12px;font-weight:700}
+.dev-dot{width:7px;height:7px;border-radius:50%;background:#9876ff;box-shadow:0 0 12px #9876ff}
+
+.dev-logo{width:110px;height:110px;object-fit:cover;border-radius:22px;border:1px solid #3a3155;box-shadow:0 12px 35px #0008;margin:0 auto 18px;display:block}
+</style>
+</head>
+<body>
+<div class="container">
+<nav class="nav"><div class="brand">INSANE <span>SHARE</span></div><div class="navlinks"><a href="#transfer">Transfer</a><a href="#features">Features</a><a href="#about">About</a></div><div class="pill">No account required</div></nav>
+
+<section class="hero">
+<div class="eyebrow"><i class="dot"></i> PRIVATE FILE TRANSFER</div>
+<h1>Send files.<br><span>Keep it simple.</span></h1>
+<p>Drop a file, create a temporary code, and share it with another device. No account. No permanent file library.</p>
+</section>
+
+<section id="transfer" class="transfer-grid">
+<div class="panel">
+<div class="panel-top"><div><div class="label">Sender</div><h2>Send a file</h2></div><div class="mini-icon">↑</div></div>
+<p class="desc">Choose a file or drag it into the area below. We'll create a short code for the receiver.</p>
+<div id="drop" class="drop"><strong>Drag & drop your file</strong><span class="label">or</span><label class="choose">Browse files<input id="picker" type="file" hidden></label></div>
+<div id="fileBox" class="file hidden"></div>
+<button id="send" class="btn primary" disabled>GENERATE SHARE CODE</button>
+<div id="sendStatus" class="status"></div>
+</div>
+
+<div class="panel">
+<div class="panel-top"><div><div class="label">Receiver</div><h2>Receive a file</h2></div><div class="mini-icon">↓</div></div>
+<p class="desc">Enter the temporary code provided by the sender to start the transfer.</p>
+<input id="codeInput" class="code" maxlength="6" placeholder="XXXXXX" autocomplete="off">
+<button id="receive" class="btn primary">CONNECT & RECEIVE</button>
+<div id="receiveStatus" class="status">Ready when you are.</div>
+</div>
+</section>
+
+<section id="transferPanel" class="panel transfer hidden">
+<div class="transfer-head"><div><div id="transferRole" class="label">TRANSFER</div><h2 id="transferTitle">Connecting…</h2></div><div id="room" class="room"></div></div>
+<div class="bar"><i id="bar"></i></div><div class="meta"><span id="percent">0%</span><span id="size"></span></div>
+</section>
+
+<section id="features" class="features">
+<div class="feature"><b>⚡ Fast</b><p>Designed for direct browser-to-browser transfers.</p></div>
+<div class="feature"><b>🔐 Private</b><p>No account or permanent file library is required.</p></div>
+<div class="feature"><b>🔢 Simple codes</b><p>Use a short temporary code instead of complicated links.</p></div>
+</section>
+
+
+<section class="developer">
+  <img class="dev-logo" src="insane-exe.gif" alt="INSANE EXE">
+  <div class="dev-label">Designed & Developed by</div>
+  <h2 class="dev-name">Mihon Roy <span>(INSANE EXE)</span></h2>
+  <div class="dev-brand"><i class="dev-dot"></i> INSANE EXE DEVELOPER</div>
+</section>
+
+<footer id="about" class="footer"><span>INSANE SHARE © 2026</span><span>Temporary browser-based file sharing</span></footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let peer=null,conn=null,file=null,code="",meta=null,chunks=[],got=0;
+const CHUNK=64*1024;
+const fmt=n=>n<1024?n+" B":n<1048576?(n/1024).toFixed(1)+" KB":n<1073741824?(n/1048576).toFixed(1)+" MB":(n/1073741824).toFixed(2)+" GB";
+const makeCode=()=>{let s="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";return Array.from({length:6},()=>s[Math.floor(Math.random()*s.length)]).join("")};
+function transfer(role,title){$("transferPanel").classList.remove("hidden");$("transferRole").textContent=role;$("transferTitle").textContent=title;$("room").textContent=code}
+function prog(p,t){$("bar").style.width=Math.min(100,p)+"%";$("percent").textContent=t||Math.round(p)+"%"}
+function pick(f){if(!f)return;file=f;$("fileBox").textContent=f.name+" • "+fmt(f.size);$("fileBox").classList.remove("hidden");$("send").disabled=false;$("sendStatus").textContent=""}
+$("picker").onchange=e=>pick(e.target.files[0]);
+$("drop").ondragover=e=>{e.preventDefault();$("drop").classList.add("active")};
+$("drop").ondragleave=()=>$("drop").classList.remove("active");
+$("drop").ondrop=e=>{e.preventDefault();$("drop").classList.remove("active");pick(e.dataTransfer.files[0])};
+
+$("send").onclick=async()=>{
+ $("send").disabled=true;$("sendStatus").textContent="Creating temporary code…";
+ code=makeCode();peer=new Peer(code,{debug:0});
+ peer.on("open",()=>{transfer("SENDER","Waiting for receiver");$("sendStatus").innerHTML="Share this code: <b style='color:#a997ff;font-size:18px;letter-spacing:4px'>"+code+"</b>";});
+ peer.on("connection",c=>{conn=c;conn.on("open",sendFile)});
+ peer.on("error",()=>{$("sendStatus").textContent="Could not create the code. Please try again.";$("send").disabled=false});
+};
+async function sendFile(){
+ $("transferTitle").textContent="Sending "+file.name;
+ conn.send(JSON.stringify({type:"meta",name:file.name,size:file.size,mime:file.type||"application/octet-stream"}));
+ let sent=0;
+ while(sent<file.size){
+  while(conn.dataChannel&&conn.dataChannel.bufferedAmount>4*1024*1024)await new Promise(r=>setTimeout(r,20));
+  let b=await file.slice(sent,Math.min(sent+CHUNK,file.size)).arrayBuffer();conn.send(b);sent+=b.byteLength;
+  prog(sent/file.size*100,Math.round(sent/file.size*100)+"% • "+fmt(sent)+" / "+fmt(file.size));
+ }
+ conn.send(JSON.stringify({type:"done"}));$("transferTitle").textContent="File sent successfully ✓";$("sendStatus").textContent="Transfer complete.";
+}
+$("receive").onclick=()=>{
+ code=$("codeInput").value.trim().toUpperCase();
+ if(code.length!==6){$("receiveStatus").textContent="Please enter the 6-character code.";return}
+ $("receive").disabled=true;transfer("RECEIVER","Connecting…");$("receiveStatus").textContent="Connecting…";
+ peer=new Peer({debug:0});
+ peer.on("open",()=>{conn=peer.connect(code,{reliable:true});setupReceiver()});
+ peer.on("error",()=>{$("receiveStatus").textContent="Code not found or unavailable.";$("receive").disabled=false;$("transferPanel").classList.add("hidden")});
+};
+function setupReceiver(){
+ conn.on("open",()=>{$("receiveStatus").textContent="Connected. Transfer starting…"});
+ conn.on("data",data=>{
+  if(typeof data==="string"){
+   let m=JSON.parse(data);
+   if(m.type==="meta"){meta=m;chunks=[];got=0;$("transferTitle").textContent="Receiving "+m.name;return}
+   if(m.type==="done"){let blob=new Blob(chunks,{type:meta.mime}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=meta.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);$("transferTitle").textContent="File received successfully ✓";$("receiveStatus").textContent="Download started.";return}
+  }
+  chunks.push(data);got+=data.byteLength;if(meta)prog(got/meta.size*100,Math.round(got/meta.size*100)+"% • "+fmt(got)+" / "+fmt(meta.size));
+ });
+}
+</script>
+</body>
+</html>
